@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Proposal</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+    <!-- Added audio element -->
+    <audio id="yesSound" src="yipeee.mp3" preload="auto"></audio>
+    <style>
+        :root {
+            --pink: #ff69b4;
+            --dark-pink: #ff1493;
+            --soft-pink: #ffe6f2;
+            --heart-color: #ff4081;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--soft-pink) 0%, #ff9a9e 100%);
+            font-family: 'Pacifico', cursive;
+            overflow: hidden;
+            position: relative;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        /* Floating hearts animation */
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: float 6s infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 30%; animation-delay: 2s; }
+        .heart:nth-child(3) { left: 50%; animation-delay: 4s; }
+        .heart:nth-child(4) { left: 70%; animation-delay: 1s; }
+        .heart:nth-child(5) { left: 90%; animation-delay: 3s; }
+
+        /* Proposal text styling */
+        .proposal-text {
+            text-align: center;
+            font-size: 2.5rem; /* Adjusted for mobile */
+            color: var(--dark-pink);
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+            margin-bottom: 2rem;
+            z-index: 1;
+            padding: 0 20px; /* Added padding for mobile */
+        }
+
+        /* Button container */
+        .button-container {
+            display: flex;
+            gap: 1rem; /* Adjusted gap for mobile */
+            justify-content: center;
+            position: relative;
+            flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+        }
+
+        /* Base button styling */
+        .button {
+            padding: 0.75rem 1.5rem; /* Adjusted padding for mobile */
+            border: none;
+            border-radius: 50px;
+            font-size: 1.25rem; /* Adjusted font size for mobile */
+            font-family: 'Pacifico', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+        }
+
+        /* Yes button styling */
+        .yes-button {
+            background: var(--pink);
+            color: white;
+        }
+
+        .yes-button:hover {
+            background: var(--dark-pink);
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.5);
+        }
+
+        /* No button styling */
+        .no-button {
+            background: var(--pink);
+            color: white;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .no-button:hover {
+            background: var(--dark-pink);
+        }
+
+        /* Explosion particles */
+        .explosion-particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.5rem;
+            color: var(--dark-pink);
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx, 0), var(--ty, 0)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Media query for larger screens */
+        @media (min-width: 768px) {
+            .proposal-text {
+                font-size: 3.5rem; /* Larger font size for PC */
+            }
+
+            .button-container {
+                gap: 2rem; /* Larger gap for PC */
+            }
+
+            .button {
+                padding: 1rem 2rem; /* Larger padding for PC */
+                font-size: 1.5rem; /* Larger font size for PC */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="heart">❤️</div>
+    <div class="heart">❤️</div>
+    <div class="heart">❤️</div>
+    <div class="heart">❤️</div>
+    <div class="heart">❤️</div>
+    
+    <!-- Proposal text -->
+    <div class="proposal-text">
+        Will You Be My Valentine, pookie? 💖
+    </div>
+    
+    <!-- Buttons -->
+    <div class="button-container">
+        <button class="button yes-button">Yes!</button>
+        <button class="button no-button" id="noButton">No</button>
+    </div>
+
+    <script>
+        const noButton = document.getElementById('noButton');
+        const yesButton = document.querySelector('.yes-button');
+        const yesSound = document.getElementById('yesSound');
+
+        // Function to create explosion particles
+        function createExplosion(x, y) {
+            const particles = 20; // Number of particles
+            for (let i = 0; i < particles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'explosion-particle';
+                particle.textContent = '💥'; // Heart-shaped particles
+
+                // Random explosion direction
+                const angle = (Math.PI * 2 * i) / particles;
+                const speed = Math.random() * 150 + 50;
+
+                particle.style.setProperty('--tx', `${Math.cos(angle) * speed}px`);
+                particle.style.setProperty('--ty', `${Math.sin(angle) * speed}px`);
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+
+                document.body.appendChild(particle);
+
+                // Remove particle after animation
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        // Add click event to No button
+        noButton.addEventListener('click', (e) => {
+            const rect = noButton.getBoundingClientRect();
+            const x = rect.left + rect.width / 2; // Center of the button
+            const y = rect.top + rect.height / 2;
+
+            // Create explosion
+            createExplosion(x, y);
+
+            // Permanently hide the button
+            noButton.style.display = 'none';
+        });
+
+        // Add click event to Yes button with sound and animation
+        yesButton.addEventListener('click', () => {
+            // Play sound
+            yesSound.play();
+            
+            // Add animation class to the body
+            document.body.style.transition = 'opacity 1s ease-out';
+            document.body.style.opacity = '0';
+            
+            // Wait for animation to complete before changing page
+            setTimeout(() => {
+                window.location.href = 'newpage.html';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
