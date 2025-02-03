@@ -22,24 +22,24 @@
             font-family: 'Pacifico', cursive;
             text-align: center;
             color: var(--dark-pink);
-            padding: 20px; /* Added padding for mobile */
-            position: relative; /* Needed for absolute positioning of the cat */
+            padding: 20px;
+            position: relative; /* Needed for absolute positioning */
             overflow: hidden; /* Prevent scrolling */
         }
 
         h1 {
-            font-size: 2.5rem; /* Adjusted for mobile */
+            font-size: 2.5rem;
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
             margin-bottom: 1rem;
         }
 
         p {
-            font-size: 1.25rem; /* Adjusted for mobile */
+            font-size: 1.25rem;
             margin: 0.5rem 0;
         }
 
         img {
-            max-width: 100%; /* Adjusted for mobile */
+            max-width: 100%;
             height: auto;
             border-radius: 20px;
             box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
@@ -70,59 +70,35 @@
             transform: scale(1.1);
         }
 
-        /* Cat walk animation */
-        .cat-walk {
+        /* DVD-style Bouncing Cat */
+        .cat {
             position: absolute;
-            width: 100px; /* Adjust size of the cat */
+            width: 100px;
             height: 100px;
             background-image: url('poopypablo.png'); /* Replace with your cat image */
             background-size: contain;
             background-repeat: no-repeat;
-            animation: walkAround 20s infinite linear;
-        }
-
-        /* Keyframes for random walking */
-        @keyframes walkAround {
-            0% {
-                top: 0;
-                left: 0;
-            }
-            25% {
-                top: 0;
-                left: calc(100% - 100px);
-            }
-            50% {
-                top: calc(100% - 100px);
-                left: calc(100% - 100px);
-            }
-            75% {
-                top: calc(100% - 100px);
-                left: 0;
-            }
-            100% {
-                top: 0;
-                left: 0;
-            }
         }
 
         /* Media query for larger screens */
         @media (min-width: 768px) {
             h1 {
-                font-size: 3rem; /* Larger font size for PC */
+                font-size: 3rem;
             }
 
             p {
-                font-size: 1.5rem; /* Larger font size for PC */
+                font-size: 1.5rem;
             }
 
             img {
-                max-width: 80%; /* Adjusted for PC */
+                max-width: 80%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Add background music audio element -->
+
+    <!-- Add background music -->
     <audio id="bgMusic" loop>
         <source src="Yebbas Heartbreak.mp3" type="audio/mp3">
     </audio>
@@ -135,16 +111,15 @@
     <!-- Add music control button -->
     <button class="music-control" id="musicToggle">🎵</button>
 
-    <!-- Add cat animation -->
-    <div class="cat-walk"></div>
+    <!-- Bouncing cat -->
+    <div class="cat" id="cat"></div>
 
     <script>
-        // Get audio element and toggle button
+        // Music toggle logic
         const bgMusic = document.getElementById('bgMusic');
         const musicToggle = document.getElementById('musicToggle');
         let isMusicPlaying = false;
 
-        // Function to toggle music
         function toggleMusic() {
             if (isMusicPlaying) {
                 bgMusic.pause();
@@ -156,26 +131,55 @@
             isMusicPlaying = !isMusicPlaying;
         }
 
-        // Add click event to music toggle button
         musicToggle.addEventListener('click', toggleMusic);
 
-        // Auto-play music when page loads (will only work if browser allows)
+        // Auto-play music on page load (if allowed)
         window.addEventListener('load', () => {
-            // Try to play music automatically
             const playPromise = bgMusic.play();
-            
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    // Automatic playback started
                     isMusicPlaying = true;
                     musicToggle.textContent = '⏸️';
-                }).catch(error => {
-                    // Auto-play was prevented
+                }).catch(() => {
                     isMusicPlaying = false;
                     musicToggle.textContent = '🎵';
                 });
             }
         });
+
+        // DVD Bounce Animation Logic
+        const cat = document.getElementById('cat');
+        let posX = 100; // Initial X position
+        let posY = 100; // Initial Y position
+        let speedX = 1; // Speed in X direction
+        let speedY = 1; // Speed in Y direction
+        const catSize = 100; // Size of the cat
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        function updatePosition() {
+            posX += speedX;
+            posY += speedY;
+
+            // Check for collisions with screen edges
+            if (posX + catSize >= window.innerWidth || posX <= 0) {
+                speedX *= -1; // Reverse direction
+            }
+            if (posY + catSize >= window.innerHeight || posY <= 0) {
+                speedY *= -1; // Reverse direction
+            }
+
+            // Update cat position
+            cat.style.left = posX + "px";
+            cat.style.top = posY + "px";
+
+            // Continue animation
+            requestAnimationFrame(updatePosition);
+        }
+
+        // Start the animation
+        updatePosition();
     </script>
+
 </body>
 </html>
