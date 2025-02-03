@@ -23,6 +23,8 @@
             text-align: center;
             color: var(--dark-pink);
             padding: 20px; /* Added padding for mobile */
+            position: relative; /* Needed for absolute positioning of the cat */
+            overflow: hidden; /* Prevent scrolling */
         }
 
         h1 {
@@ -68,6 +70,41 @@
             transform: scale(1.1);
         }
 
+        /* Cat walk animation */
+        .cat-walk {
+            position: absolute;
+            width: 100px; /* Adjust size of the cat */
+            height: 100px;
+            background-image: url('poopypablo.png'); /* Replace with your cat image */
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: walkAround 20s infinite linear;
+        }
+
+        /* Keyframes for random walking */
+        @keyframes walkAround {
+            0% {
+                top: 0;
+                left: 0;
+            }
+            25% {
+                top: 0;
+                left: calc(100% - 100px);
+            }
+            50% {
+                top: calc(100% - 100px);
+                left: calc(100% - 100px);
+            }
+            75% {
+                top: calc(100% - 100px);
+                left: 0;
+            }
+            100% {
+                top: 0;
+                left: 0;
+            }
+        }
+
         /* Media query for larger screens */
         @media (min-width: 768px) {
             h1 {
@@ -97,6 +134,9 @@
 
     <!-- Add music control button -->
     <button class="music-control" id="musicToggle">🎵</button>
+
+    <!-- Add cat animation -->
+    <div class="cat-walk"></div>
 
     <script>
         // Get audio element and toggle button
